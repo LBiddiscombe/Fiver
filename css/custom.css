@@ -1,0 +1,119 @@
+html {
+    background-color: #FFECC9;
+}
+
+div {
+    overflow: hidden;
+}
+
+ul.players{
+    margin: 0 20px 0;
+}
+
+.nav.box {
+    background-color:#FFC04D;
+    margin-bottom: 0.3rem;
+}
+
+#logoname {
+    margin-top: -5px;
+}
+
+.modal.subs .modal-card {
+    max-height: calc(100vh - 100px) !important;
+    margin: 0 60px;
+}
+
+.modal.pay .modal-card {
+    margin: 0 40px 160px;
+    min-width: 18em;
+}
+
+.modal.subs .modal-card-body, .modal.pay .modal-card-body {
+    background-color: transparent !important;
+}
+
+.nav-toggle {
+    height: inherit !important;
+}
+
+.nav-toggle:hover {
+    background-color: transparent !important;
+}
+
+.nav-toggle.is-active span {
+    background-color: #7a7a7a;
+}
+
+.columns {
+    padding-left: 5px !important;
+    padding-right: 5px !important;
+}
+
+.column {
+    margin: 5px !important;
+}
+
+li.box {
+    padding-top: 1rem !important;
+    padding-bottom: 1rem !important;
+    margin-bottom: 0.5rem !important;
+}
+
+li .media-left {
+    margin-right: 5px !important;
+}
+
+li .media-right {
+    margin-left: -100% !important;
+}
+
+li.box.paid {
+    box-shadow: 0 2px 3px rgba(10, 10, 10, 0.1), 0 0 0 1px rgba(10, 10, 10, 0.1), inset 0px -5px 0px 0px limegreen;
+}
+
+/* highlight a selected li box */
+li.box.selected {
+    box-shadow:inset 0px 0px 0px 4px;
+}
+
+li.box .media-left .icon.selected {
+    display: none;
+}
+
+li.box.selected .media-left .icon.selected {
+    display: inline-flex;
+}
+
+li.box .media-left .icon.unselected {
+    display: inline-flex;
+}
+
+li.box.selected .media-left .icon.unselected {
+    display: none;
+}
+
+li.box .media-right .icon {
+    display: none;
+}
+
+li.box.selected .media-right .icon {
+    display: inline-flex;
+}
+
+li.box .media-left a {
+    color: #4a4a4a;
+}
+
+li.box .media-right a {
+    color: #4a4a4a;
+}
+
+.title#playername {
+    color:#FFC04D;
+    margin: 0;
+}
+
+#paybutton, #submitweek {
+    background-color: #FFC04D;
+}

@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<!--
+To run this app, open a command prompt in the root and type NPM START
+-->
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+  <title>Fiver</title>
+
+  
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link href="css/bulma.css" rel="stylesheet">
+  <link href="css/custom.css" rel="stylesheet">
+</head>
+
+<body>
+
+  <nav class="nav box is-paddingless" id="mainnav">
+    <div class="nav-left">
+      <a class="nav-item is-active" data-page="game">
+        <span class="icon is-large"><i class="fa fa-soccer-ball-o"></i></span>
+        <h1 class="title" id="logoname">&nbsp;Fiver</h1>
+      </a>
+    </div>
+
+    <div class="nav-center">
+      <a class="nav-item is-active" data-page="pick"><span class="icon"><i class="fa fa-random"></i></span>&nbsp;Pick</a>
+    </div>
+
+    <span class="nav-toggle is-large">
+      <span></span>
+      <span></span>
+      <span></span>
+    </span>
+
+    <div class="nav-right nav-menu">
+      <a class="nav-item is-active" data-page="save"><span class="icon"><i class="fa fa-cloud-upload"></i></span>&nbsp;Save</a>
+      <a class="nav-item is-active" data-page="game"><span class="icon"><i class="fa fa-soccer-ball-o"></i></span>&nbsp;Game</a>
+      <a class="nav-item is-active" data-page="players"><span class="icon"><i class="fa fa-users"></i></span>&nbsp;Players</a>
+      <a class="nav-item is-active" data-page="history"><span class="icon"><i class="fa fa-history"></i></span>&nbsp;History</a>
+      <a class="nav-item is-active" data-page="settings"><span class="icon"><i class="fa fa-cog"></i></span>&nbsp;Settings</a>
+    </div>
+
+  </nav>
+
+  <div class="main-content">
+
+    <div class="game page">
+
+      <p class="listheader is-full-width has-text-centered">Thursday March 30</p>
+
+      <div class="columns is-mobile is-gapless">
+        <div class="column">
+          <ul id="team1List" class="team">
+            <li>
+              Loading Players...
+            </li>            
+          </ul>
+        </div>
+
+        <div class="column">
+          <ul id="team2List" class="team">
+            <li>
+              Loading Players...
+            </li>            
+          </ul>
+        </div>
+      </div>
+
+      <div class="modal subs">
+        <div class="modal-background subs"></div>
+        <div class="modal-card">
+          <section class="modal-card-body">
+            <ul id="subsList" class="team">
+              <li>
+                Loading Players...
+              </li>            
+            </ul>
+          </section>
+        </div>
+      </div>
+
+      <div class="modal pay">
+        <div class="modal-background pay"></div>
+        <div class="modal-card">
+          <h1 id="playername" class="title has-text-centered">Take Monies</h1>
+          <section class="modal-card-body">
+            <div class="field level-item">
+              <p class="control has-icon">
+                <input class="input is-large money" type="number" pattern="[0-9]*" step="0.01" placeholder="Enter Amount" value="">
+                <span class="icon is-large">
+                    <i class="fa fa-gbp"></i>
+                  </span>
+              </p>
+            </div>
+            <div class="box">
+              <div class="field">
+                <p class="control">
+                  <a class="button is-medium is-white is-fullwidth" id="paytoggle">
+                    <span class="icon is-large">
+                        <i class="fa fa-square-o"></i>
+                      </span>
+                    <span> Confirm Amount</span>
+                  </a>
+                  <br>
+                  <a class="button is-large is-success is-fullwidth is-disabled" id="paybutton" data-amount=0>Pay</a>
+                </p>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="players page is-hidden">
+      <br>
+      <ul id="playersList" class="players">
+        <li class="box is-paddingless">
+          Loading Players...
+        </li>            
+      </ul>
+    </div>
+
+    <div class="history page is-hidden">
+      <h1 class="title">Payments History</h1>
+      <h2 class="subtitle">
+        Table of all payments by game
+      </h2>
+    </div>
+
+    <div class="save page is-hidden">
+      <p class="listheader is-full-width has-text-centered">Thursday March 30</p>
+      <div class="columns">
+        <div class="column">
+          <table class="table is-narrow is-striped">
+            <thead>
+              <tr>
+                <th>Team</th>
+                <th>Name</th>
+                <th>Paid</th>
+                <th><input type="checkbox" id="checkAllPlayers"></th>
+              </tr>
+            </thead>
+            <tbody id="playingList">
+            </tbody>
+          </table>
+          <div class="field">
+            <p class="control">
+              <a class="button is-large is-success is-fullwidth is-disabled" id="submitweek" data-page="game">Submit Week</a>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="settings page is-hidden">
+      <h1 class="title">Settings</h1>
+      <h2 class="subtitle">
+        Set Match Fee, Pitch Cost etc
+      </h2>
+
+      <div class="box">
+        <div class="field">
+          <p class="control">
+            <a class="button is-large is-success is-fullwidth" id="resetdata" data-page="game">Reset All Data!</a>
+          </p>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <script src="js/app.js"></script>
+</body>
+
+</html>
