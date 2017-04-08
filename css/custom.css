@@ -15,7 +15,7 @@ ul.players{
     margin-bottom: 0.3rem;
 }
 
-#logoname {
+#logo-name {
     margin-top: -5px;
 }
 
@@ -110,11 +110,11 @@ li.box .media-right a {
     color: #4a4a4a;
 }
 
-.title#playername {
+.title#player-name {
     color:#FFC04D;
     margin: 0;
 }
 
-#paybutton, #submitweek, .addgamebutton {
+#paybutton, #submitweek, .add-game-button {
     background-color: #FFC04D !important;
 }

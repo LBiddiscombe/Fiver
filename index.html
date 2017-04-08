@@ -20,11 +20,11 @@ To run this app, open a command prompt in the root and type NPM START
 
 <body>
 
-  <nav class="nav box is-paddingless" id="mainnav">
+  <nav class="nav box is-paddingless" id="main-nav">
     <div class="nav-left">
       <a class="nav-item is-active" data-page="game">
         <span class="icon is-large"><i class="fa fa-soccer-ball-o"></i></span>
-        <h1 class="title" id="logoname">&nbsp;Fiver</h1>
+        <h1 class="title" id="logo-name">&nbsp;Fiver</h1>
       </a>
     </div>
 
@@ -39,7 +39,6 @@ To run this app, open a command prompt in the root and type NPM START
     </span>
 
     <div class="nav-right nav-menu">
-      <a class="nav-item is-active" data-page="save"><span class="icon"><i class="fa fa-cloud-upload"></i></span>&nbsp;Save</a>
       <a class="nav-item is-active" data-page="game"><span class="icon"><i class="fa fa-soccer-ball-o"></i></span>&nbsp;Game</a>
       <a class="nav-item is-active" data-page="players"><span class="icon"><i class="fa fa-users"></i></span>&nbsp;Players</a>
       <a class="nav-item is-active" data-page="history"><span class="icon"><i class="fa fa-history"></i></span>&nbsp;History</a>
@@ -66,28 +65,28 @@ To run this app, open a command prompt in the root and type NPM START
 
       <div class="columns is-mobile is-gapless">
         <div class="column">
-          <ul id="team1List" class="team">
+          <ul id="team1-list" class="team">
           </ul>
         </div>
 
         <div class="column">
-          <ul id="team2List" class="team">
+          <ul id="team2-list" class="team">
           </ul>
         </div>
       </div>
 
-       <div class="modal" id="addgamemodal">
-        <div class="modal-background" id="addgamemodalback"></div>
+       <div class="modal" id="add-game-modal">
+        <div class="modal-background" id="add-game-modal-bg"></div>
         <div class="modal-card">
           <section class="modal-card-body">
-            <form id="add-game">
+            <form id="add-game-form">
               <div class="field">
                 <label class="label">Game Date</label>
                 <p class="control">
-                  <input class="input" type="date" placeholder="Enter Date..." id="addgamedate">
+                  <input class="input" type="date" placeholder="Enter Date..." id="add-game-date">
                 </p>
               </div>
-              <input type="submit" value="Create Game" class="button is-large has-text-centered is-primary is-fullwidth addgamebutton">
+              <input type="submit" value="Create Game" class="button is-large has-text-centered is-primary is-fullwidth add-game-button">
             </form>
           </section>
         </div>
@@ -97,7 +96,7 @@ To run this app, open a command prompt in the root and type NPM START
         <div class="modal-background subs"></div>
         <div class="modal-card">
           <section class="modal-card-body">
-            <ul id="subsList" class="team">
+            <ul id="subs-list" class="team">
             </ul>
           </section>
         </div>
@@ -106,7 +105,7 @@ To run this app, open a command prompt in the root and type NPM START
       <div class="modal pay">
         <div class="modal-background pay"></div>
         <div class="modal-card">
-          <h1 id="playername" class="title has-text-centered">Take Monies</h1>
+          <h1 id="player-name" class="title has-text-centered">Take Monies</h1>
           <section class="modal-card-body">
             <div class="field level-item">
               <p class="control has-icon">
@@ -119,14 +118,14 @@ To run this app, open a command prompt in the root and type NPM START
             <div class="box">
               <div class="field">
                 <p class="control">
-                  <a class="button is-medium is-white is-fullwidth" id="paytoggle">
+                  <a class="button is-medium is-white is-fullwidth" id="pay-toggle">
                     <span class="icon is-large">
                         <i class="fa fa-square-o"></i>
                       </span>
                     <span> Confirm Amount</span>
                   </a>
                   <br>
-                  <a class="button is-large is-success is-fullwidth is-disabled" id="paybutton" data-amount=0>Pay</a>
+                  <a class="button is-large is-success is-fullwidth is-disabled" id="pay-button" data-amount=0>Pay</a>
                 </p>
               </div>
             </div>
@@ -138,30 +137,11 @@ To run this app, open a command prompt in the root and type NPM START
 
     <div class="players page is-hidden">
       <br>
-      <ul id="playersList" class="players">
+      <ul id="players-list" class="players">
         <li class="box is-paddingless">
           Loading Players...
         </li>            
       </ul>
-    </div>
-
-    <div class="welcome page is-hidden">
-      <br>
-      <section class="hero">
-        <div class="hero-body">
-          <div class="container">
-            <h1 class="title">
-              Welcome to Fiver
-            </h1>
-            <h2 class="subtitle">
-              Add players to begin
-            </h2>
-          </div>
-        </div>
-      </section>
-      
-      
-
     </div>
 
     <div class="history page is-hidden">
@@ -169,31 +149,6 @@ To run this app, open a command prompt in the root and type NPM START
       <h2 class="subtitle">
         Table of all payments by game
       </h2>
-    </div>
-
-    <div class="save page is-hidden">
-      <p class="listheader is-full-width has-text-centered">Thursday March 30</p>
-      <div class="columns">
-        <div class="column">
-          <table class="table is-narrow is-striped">
-            <thead>
-              <tr>
-                <th>Team</th>
-                <th>Name</th>
-                <th>Paid</th>
-                <th><input type="checkbox" id="checkAllPlayers"></th>
-              </tr>
-            </thead>
-            <tbody id="playingList">
-            </tbody>
-          </table>
-          <div class="field">
-            <p class="control">
-              <a class="button is-large is-success is-fullwidth is-disabled" id="submitweek" data-page="game">Submit Week</a>
-            </p>
-          </div>
-        </div>
-      </div>
     </div>
 
     <div class="settings page is-hidden">
@@ -205,7 +160,7 @@ To run this app, open a command prompt in the root and type NPM START
       <div class="box">
         <div class="field">
           <p class="control">
-            <a class="button is-large is-success is-fullwidth" id="resetdata" data-page="game">Reset All Data!</a>
+            <a class="button is-large is-success is-fullwidth" id="reset-data" data-page="game">Reset All Data!</a>
           </p>
         </div>
       </div>

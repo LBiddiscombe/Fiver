@@ -28,7 +28,7 @@ var gameIndex = -1;
 const settings = {
   team1name : "Red",
   team2name : "White",
-  teamSize : 6,
+  teamSize : 5,
   gameFrequency: 7
 }
 
@@ -171,7 +171,7 @@ const Navigate = {
 const AddGame = {
 
   init: function() {
-    const addGameDate = document.querySelector("#addgamedate");
+    const addGameDate = document.querySelector("#add-game-date");
     let dt = new Date().toISOString().split('T')[0];
 
     if (games.length > 0) {
@@ -182,13 +182,13 @@ const AddGame = {
 
     addGameDate.value = dt;
 
-    const modal = document.querySelector("#addgamemodal");
+    const modal = document.querySelector("#add-game-modal");
     modal.classList.add("is-active");
 
   },
 
   gameDate: function() {
-    const addGameDate = document.querySelector("#addgamedate");
+    const addGameDate = document.querySelector("#add-game-date");
     return addGameDate.value;
   },
 
@@ -232,7 +232,7 @@ const AddGame = {
 
     games.push(newGame);
 
-    const modal = document.querySelector("#addgamemodal");
+    const modal = document.querySelector("#add-game-modal");
     modal.classList.remove("is-active");
 
     gameIndex += 1;
@@ -316,7 +316,7 @@ const GamePage = {
       const playerSelected = document.querySelector(".team li.selected");
       const player = game.team1.find(player => (player.listidx == playerSelected.dataset.listidx)) || game.team2.find(player => (player.listidx == playerSelected.dataset.listidx));
       const modal = document.querySelector(".modal.pay");
-      const modalTitle = document.querySelector(".modal.pay #playername");
+      const modalTitle = document.querySelector(".modal.pay #player-name");
       modalTitle.innerHTML = player.name;
       moneyField.value = (player.paid) ? player.paid : "";
       payButton.dataset.amount = moneyField.value;
@@ -411,10 +411,10 @@ const GamePage = {
 }
 
 // navigation
-const mainNav = document.querySelector("#mainnav");
+const mainNav = document.querySelector("#main-nav");
 const navMenu = document.querySelector(".nav-menu");
 const navToggle = document.querySelector(".nav-toggle");
-const addGameModalBack = document.querySelector("#addgamemodalback");
+const addGameModalBack = document.querySelector("#add-game-modal-bg");
 const prevGame = document.querySelector("#previous-game");
 const nextGame = document.querySelector("#next-game");
 
@@ -426,13 +426,18 @@ navToggle.addEventListener("click", Navigate.toggleNavMenu);
 addGameModalBack.addEventListener("click", Navigate.closeAddGameModal);
 
 // forms
-const addGameForm = document.querySelector("#add-game");
+const addGameForm = document.querySelector("#add-game-form");
 addGameForm.addEventListener("submit", AddGame.submit);
 
+const team1List = document.querySelector("#team1-list");
+const team2List = document.querySelector("#team2-list");
+const subsList = document.querySelector("#subs-list");
+const playersList = document.querySelector("#players-list");
+
 // payment modal
-const payToggle = document.querySelector("#paytoggle");
+const payToggle = document.querySelector("#pay-toggle");
 const payToggleIcon = payToggle.querySelector("i");
-const payButton = document.querySelector("#paybutton");
+const payButton = document.querySelector("#pay-button");
 const moneyField = document.querySelector("input.money");
 payToggle.addEventListener("click", GamePage.payToggleButton);
 payButton.addEventListener("click", GamePage.addPayment);
