@@ -31,6 +31,7 @@ ul.players{
 
 .modal.subs .modal-card-body, .modal.pay .modal-card-body {
     background-color: transparent !important;
+    overflow-x: hidden;
 }
 
 .nav-toggle {
@@ -65,7 +66,7 @@ li .media-left {
 }
 
 li .media-right {
-    margin-left: -100% !important;
+    margin-left: -48px !important;
 }
 
 li.box.paid {
@@ -114,6 +115,6 @@ li.box .media-right a {
     margin: 0;
 }
 
-#paybutton, #submitweek {
-    background-color: #FFC04D;
+#paybutton, #submitweek, .addgamebutton {
+    background-color: #FFC04D !important;
 }

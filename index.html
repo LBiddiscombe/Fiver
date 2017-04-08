@@ -8,13 +8,14 @@ To run this app, open a command prompt in the root and type NPM START
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
 
   <title>Fiver</title>
-
   
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
   <link href="css/bulma.css" rel="stylesheet">
   <link href="css/custom.css" rel="stylesheet">
+  
 </head>
 
 <body>
@@ -51,23 +52,44 @@ To run this app, open a command prompt in the root and type NPM START
 
     <div class="game page">
 
-      <p class="listheader is-full-width has-text-centered">Thursday March 30</p>
+      <nav class="nav">
+        <div class="nav-center">
+          <a class="nav-item" id="previous-game">
+            Previous
+          </a>
+          <a class="nav-item is-disabled"><p class="listheader is-full-width has-text-centered" id="game-date"></p></a>
+          <a class="nav-item" id="next-game">
+            Next
+          </a>
+        </div>
+      </nav>
 
       <div class="columns is-mobile is-gapless">
         <div class="column">
           <ul id="team1List" class="team">
-            <li>
-              Loading Players...
-            </li>            
           </ul>
         </div>
 
         <div class="column">
           <ul id="team2List" class="team">
-            <li>
-              Loading Players...
-            </li>            
           </ul>
+        </div>
+      </div>
+
+       <div class="modal" id="addgamemodal">
+        <div class="modal-background" id="addgamemodalback"></div>
+        <div class="modal-card">
+          <section class="modal-card-body">
+            <form id="add-game">
+              <div class="field">
+                <label class="label">Game Date</label>
+                <p class="control">
+                  <input class="input" type="date" placeholder="Enter Date..." id="addgamedate">
+                </p>
+              </div>
+              <input type="submit" value="Create Game" class="button is-large has-text-centered is-primary is-fullwidth addgamebutton">
+            </form>
+          </section>
         </div>
       </div>
 
@@ -76,9 +98,6 @@ To run this app, open a command prompt in the root and type NPM START
         <div class="modal-card">
           <section class="modal-card-body">
             <ul id="subsList" class="team">
-              <li>
-                Loading Players...
-              </li>            
             </ul>
           </section>
         </div>
@@ -124,6 +143,25 @@ To run this app, open a command prompt in the root and type NPM START
           Loading Players...
         </li>            
       </ul>
+    </div>
+
+    <div class="welcome page is-hidden">
+      <br>
+      <section class="hero">
+        <div class="hero-body">
+          <div class="container">
+            <h1 class="title">
+              Welcome to Fiver
+            </h1>
+            <h2 class="subtitle">
+              Add players to begin
+            </h2>
+          </div>
+        </div>
+      </section>
+      
+      
+
     </div>
 
     <div class="history page is-hidden">
