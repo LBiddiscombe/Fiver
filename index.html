@@ -51,14 +51,14 @@ To run this app, open a command prompt in the root and type NPM START
 
     <div class="game page">
 
-      <nav class="nav">
+      <nav class="nav weeks">
         <div class="nav-center">
           <a class="nav-item" id="previous-game">
-            Previous
+            <span class="icon"><i class="fa fa-arrow-left"></i></span>
           </a>
           <a class="nav-item is-disabled"><p class="listheader is-full-width has-text-centered" id="game-date"></p></a>
           <a class="nav-item" id="next-game">
-            Next
+            <span class="icon"><i class="fa fa-arrow-right"></i></span>
           </a>
         </div>
       </nav>
@@ -79,7 +79,7 @@ To run this app, open a command prompt in the root and type NPM START
         <div class="modal-background" id="add-game-modal-bg"></div>
         <div class="modal-card">
           <section class="modal-card-body">
-            <form id="add-game-form">
+            <form class="box" id="add-game-form">
               <div class="field">
                 <label class="label">Game Date</label>
                 <p class="control">
@@ -92,8 +92,8 @@ To run this app, open a command prompt in the root and type NPM START
         </div>
       </div>
 
-      <div class="modal subs">
-        <div class="modal-background subs"></div>
+      <div class="modal" id="subs-modal">
+        <div class="modal-background" id="subs-modal-bg"></div>
         <div class="modal-card">
           <section class="modal-card-body">
             <ul id="subs-list" class="team">
@@ -102,8 +102,8 @@ To run this app, open a command prompt in the root and type NPM START
         </div>
       </div>
 
-      <div class="modal pay">
-        <div class="modal-background pay"></div>
+      <div class="modal" id="pay-modal">
+        <div class="modal-background" id="pay-modal-bg"></div>
         <div class="modal-card">
           <h1 id="player-name" class="title has-text-centered">Take Monies</h1>
           <section class="modal-card-body">

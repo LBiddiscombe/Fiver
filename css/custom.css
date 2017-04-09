@@ -15,21 +15,27 @@ ul.players{
     margin-bottom: 0.3rem;
 }
 
+.nav.weeks {
+    background-color: transparent;
+    min-height: 2rem;
+    z-index: 0 !important;
+}
+
 #logo-name {
     margin-top: -5px;
 }
 
-.modal.subs .modal-card {
+#subs-modal .modal-card {
     max-height: calc(100vh - 100px) !important;
     margin: 0 60px;
 }
 
-.modal.pay .modal-card {
+#pay-modal .modal-card {
     margin: 0 40px 160px;
     min-width: 18em;
 }
 
-.modal.subs .modal-card-body, .modal.pay .modal-card-body {
+#subs-modal .modal-card-body, #pay-modal .modal-card-body, #add-game-modal .modal-card-body {
     background-color: transparent !important;
     overflow-x: hidden;
 }
