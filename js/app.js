@@ -8,18 +8,16 @@ var players = [
   { id: 6, name: "Adam", weighting: 2, balance: 0.00},
   { id: 7, name: "Jake", weighting: 3, balance: 0.00},
   { id: 8, name: "Mark", weighting: 5, balance: 0.00},
-  { id: 9, name: "Rich", weighting: 3, balance: 0.00},
+  { id: 9, name: "Rich V", weighting: 3, balance: 0.00},
   { id: 10, name: "Si", weighting: 4, balance: 0.00},
   { id: 11, name: "Dean", weighting: 2, balance: 0.00},
   { id: 12, name: "Aders", weighting: 3, balance: 0.00},
   { id: 13, name: "Jon", weighting: 3, balance: 0.00},
-  { id: 14, name: "Player 14", weighting: 3, balance: 0.00},
-  { id: 15, name: "Player 15", weighting: 3, balance: 0.00},
-  { id: 16, name: "Player 16", weighting: 3, balance: 0.00},
-  { id: 17, name: "Player 17", weighting: 3, balance: 0.00},
-  { id: 18, name: "Player 18", weighting: 3, balance: 0.00},
-  { id: 19, name: "Player 19", weighting: 3, balance: 0.00},
-  { id: 20, name: "Player 20", weighting: 3, balance: 0.00}
+  { id: 14, name: "Joe", weighting: 5, balance: 0.00},
+  { id: 15, name: "James", weighting: 3, balance: 0.00},
+  { id: 16, name: "Russ", weighting: 2, balance: 0.00},
+  { id: 17, name: "Mike", weighting: 3, balance: 0.00},
+  { id: 18, name: "Rich M", weighting: 3, balance: 0.00}
 ];
 
 var gameIndex = parseInt(localStorage.getItem("gameIndex")) || -1;
