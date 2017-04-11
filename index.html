@@ -56,7 +56,12 @@ To run this app, open a command prompt in the root and type NPM START
           <a class="nav-item" id="previous-game">
             <span class="icon"><i class="fa fa-arrow-left"></i></span>
           </a>
-          <a class="nav-item is-disabled"><p class="listheader is-full-width has-text-centered" id="game-date"></p></a>
+          <a class="nav-item is-disabled">
+            <p class="listheader is-full-width has-text-centered" id="game-date"></p>
+          </a>
+          <a class="nav-item is-paddingless" id="game-lock">
+            <span class="icon"><i class="fa fa-lock"></i></span>
+          </a>
           <a class="nav-item" id="next-game">
             <span class="icon"><i class="fa fa-arrow-right"></i></span>
           </a>
@@ -78,17 +83,37 @@ To run this app, open a command prompt in the root and type NPM START
        <div class="modal" id="add-game-modal">
         <div class="modal-background" id="add-game-modal-bg"></div>
         <div class="modal-card">
+
           <section class="modal-card-body">
-            <form class="box" id="add-game-form">
-              <div class="field">
-                <label class="label">Game Date</label>
-                <p class="control">
-                  <input class="input" type="date" placeholder="Enter Date..." id="add-game-date">
+            <form id="add-game-form">
+              <div class="field level-item">
+                <p class="control has-icon">
+                  <input class="input is-large" type="date" placeholder="Enter Date..." id="add-game-date">
+                  <span class="icon is-large">
+                      <i class="fa fa-calendar-plus-o"></i>
+                    </span>
                 </p>
               </div>
-              <input type="submit" value="Create Game" class="button is-large has-text-centered is-primary is-fullwidth add-game-button">
+              <div class="box">
+                <div class="field">
+                  <p class="control">
+                    <a class="button is-medium is-white is-fullwidth" id="add-game-toggle">
+                      <span class="icon is-large">
+                          <i class="fa fa-square-o"></i>
+                        </span>
+                      <span> Confirm Date</span>
+                    </a>
+                    <br>
+                    <input type="submit" value="Create Game" class="button is-large has-text-centered is-primary is-fullwidth" id="add-game-button">
+                    <small>Note: This will lock the previous weeks game</small>
+                  </p>
+                </div>
+              </div>
             </form>
           </section>
+
+
+          
         </div>
       </div>
 
@@ -145,10 +170,30 @@ To run this app, open a command prompt in the root and type NPM START
     </div>
 
     <div class="history page is-hidden">
-      <h1 class="title">Payments History</h1>
-      <h2 class="subtitle">
-        Table of all payments by game
-      </h2>
+      <div class="columns">
+        <div class="column">
+
+          <span class="select is-fullwidth">
+            <select id="player-select">
+              <option>All Players</option>
+            </select>
+          </span>
+
+          <br></br>
+
+          <table class="table is-narrow is-striped">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Name</th>
+                <th>Paid</th>
+              </tr>
+            </thead>
+            <tbody id="history-rows">
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
 
     <div class="settings page is-hidden">

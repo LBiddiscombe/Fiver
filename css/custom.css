@@ -6,12 +6,21 @@ div {
     overflow: hidden;
 }
 
-ul.players{
+.is-invisible {
+    visibility: hidden;
+}
+
+ul.team {
+     -webkit-tap-highlight-color:transparent;
+}
+
+ul.players {
     margin: 0 20px 0;
 }
 
 .nav.box {
     background-color:#FFC04D;
+    -webkit-tap-highlight-color:transparent;
     margin-bottom: 0.3rem;
 }
 
@@ -19,6 +28,10 @@ ul.players{
     background-color: transparent;
     min-height: 2rem;
     z-index: 0 !important;
+}
+
+#player-select {
+    margin-bottom: 50px;
 }
 
 #logo-name {
@@ -121,6 +134,6 @@ li.box .media-right a {
     margin: 0;
 }
 
-#paybutton, #submitweek, .add-game-button {
+#pay-button, #add-game-button {
     background-color: #FFC04D !important;
 }

@@ -57,7 +57,10 @@ const Helpers = {
   },
 
   formatMoney: function(value) {
-   return "£" + parseFloat(value).toFixed(2);
+    if (!value || value === "NaN") {
+      return "£0.00";
+    }
+    return "£" + parseFloat(value).toFixed(2);
   },
 
   maskMoney: function(e) {
@@ -78,7 +81,13 @@ const Helpers = {
       game = games[gameIndex];
     }
     return game;
-  }
+  },
+
+  displayTeam: function (team = [], playerList, unselectedIcon = "fa-user", selectedIcon = "fa-gbp", idxoffset = 0) {
+    playerList.innerHTML = team.map((p, i) => {
+        return Render.playerBox (p, unselectedIcon, "fa-gbp", i + idxoffset);
+    }).join("");
+  },
 
 }
 
@@ -86,8 +95,10 @@ const Render = {
 
   playerBox: function (player, unselectedIcon = "fa-user", selectedIcon ="fa-gbp", i) {
 
-    const paidClass = (player.paid) ? "paid" : "unpaid";
+    const paidClass = (player.paid && player.paid > 0) ? "paid" : "unpaid";
     player.listidx = i;
+
+    selectedIcon = (player.id === 0) ? unselectedIcon : selectedIcon;
 
     return `
       <li class="box is-paddingless ${paidClass}" data-playerid="${player.id}" data-listidx="${i}">
@@ -96,7 +107,7 @@ const Render = {
             <span class="unselected icon is-large">
                 <i class="fa ${unselectedIcon}"></i>
             </span>
-            <a data-action="pay">
+            <a data-action="${(player.id === 0) ? "" : "pay"}">
               <span class="selected icon is-large">
                   <i class="fa ${selectedIcon}"></i>
               </span>
@@ -118,6 +129,16 @@ const Render = {
         </article>
       </li>
     `;
+  },
+
+  historyRow: function(dt, name, paid) {
+    return `
+      <tr>
+        <td>${dt}</td>
+        <td>${name}</td>
+        <td>${Helpers.formatMoney(paid)}</td>
+      </tr>
+    `;
   }
 }
 
@@ -126,13 +147,30 @@ const GamePage = {
   init: function() {
     const game = Helpers.getGame();
     const gd = document.querySelector("#game-date");
+    const gl = document.querySelector("#game-lock i");
     const subs = GamePage.subs(game);
     
     gd.innerHTML = Helpers.formatDate(game.gameDate);
 
-    this.displayTeam(game.team1, team1List);
-    this.displayTeam(game.team2, team2List, "fa-user-o", "fa-gbp", settings.teamSize);
-    this.displayTeam(subs, subsList, "fa-user-circle-o", "", settings.teamSize * 2);
+    if (gameIndex === 0) {
+      prevGame.classList.add("is-invisible");
+    }
+    else {
+      prevGame.classList.remove("is-invisible");
+    }
+
+    if (gameIndex === games.length - 1) {
+      gl.classList.add("fa-unlock");
+      gl.classList.remove("fa-lock");
+    }
+    else {
+      gl.classList.remove("fa-unlock");
+      gl.classList.add("fa-lock");
+    }
+
+    Helpers.displayTeam(game.team1, team1List);
+    Helpers.displayTeam(game.team2, team2List, "fa-user-o", "fa-gbp", settings.teamSize);
+    Helpers.displayTeam(subs, subsList, "fa-user-circle-o", "", settings.teamSize * 2);
 
     localStorage.setItem("gameIndex", gameIndex);
     localStorage.setItem("game|" + gameIndex, JSON.stringify(game));
@@ -155,12 +193,6 @@ const GamePage = {
     }
   },
 
-  displayTeam: function (team = [], playerList, unselectedIcon = "fa-user", selectedIcon = "fa-gbp", idxoffset = 0) {
-    playerList.innerHTML = team.map((p, i) => {
-        return Render.playerBox (p, unselectedIcon, "fa-gbp", i + idxoffset);
-    }).join("");
-  },
-
   subs: function (game) {
     const teams = game.team1.concat(game.team2);
     var subs = players.filter(p => (teams.findIndex(teamplayer => (teamplayer.id === p.id)) === -1));
@@ -174,6 +206,9 @@ const GamePage = {
   },
 
   selectPlayer: function (e) {
+
+    if (gameIndex != games.length - 1) return;
+
     const li = event.target.closest("li");
     const a = event.target.closest("a");
     if(!li && !a) {return};
@@ -265,6 +300,12 @@ const GamePage = {
     payButton.classList.toggle("is-disabled");
   },
 
+  addGameToggleButton: function(e) {
+    addGameToggleIcon.classList.toggle("fa-check-square-o");
+    addGameToggleIcon.classList.toggle("fa-square-o");
+    addGameButton.classList.toggle("is-disabled");
+  },
+
   closeSubsModal: function() {
     const modal = event.target.closest(".modal");
     if (modal) {modal.classList.remove("is-active")};
@@ -289,6 +330,10 @@ const GamePage = {
 
     const modal = document.querySelector("#add-game-modal");
     modal.classList.add("is-active");
+
+    addGameToggleIcon.classList.remove("fa-check-square-o");
+    addGameToggleIcon.classList.add("fa-square-o");
+    addGameButton.classList.add("is-disabled");
 
   },
 
@@ -351,8 +396,123 @@ const GamePage = {
     if (games.length === 0) return;
     const modal = e.target.closest(".modal");
     if (modal) {modal.classList.remove("is-active")};
+  },
+
+  sortTeamByPlayerName: function (team, offset = 0) {
+    team.sort(function(a, b) {
+      if (a.name.toUpperCase() < b.name.toUpperCase()) {
+        return -1;
+      }
+      if (a.name.toUpperCase() > b.name.toUpperCase()) {
+        return 1;
+      }
+      return 0;
+    });
+    
+    let newIdx = 0;
+    let totalWeighting = 0;
+    team.forEach(function(player) {
+      player.listidx = newIdx;
+      newIdx += 1;
+      totalWeighting += player.weighting;
+    });
+
+    return totalWeighting;
+  },
+
+  pickTeams: function () {
+
+    if (gameIndex != games.length - 1) return;
+
+    const teamPick = [1,2,2,1,2,1,2,1,2,1];
+    const game = Helpers.getGame();
+    const teams = game.team1.concat(game.team2)
+
+    teams.sort(function(a,b) {
+      return parseFloat(a.weighting + Math.random()) - parseFloat(b.weighting + Math.random());
+    });
+
+    let i = 0;
+    teams.forEach(function(p) {
+      p.team = teamPick[i];
+      i += 1;
+    });
+
+    teams.sort(function(a,b) {
+      return a.team - b.team;
+    });
+
+    // remove payments on copy
+    teams.forEach(function(p) {
+      delete p.team;
+    });
+
+    game.team1 = teams.slice(0,settings.teamSize);
+    game.team2 = teams.slice(settings.teamSize,settings.teamSize * 2);
+
+    const team1Weighting = GamePage.sortTeamByPlayerName(game.team1);
+    const team2Weighting = GamePage.sortTeamByPlayerName(game.team2, settings.teamSize);
+
+    console.log(team1Weighting, team2Weighting);
+
   }
 
+}
+
+const PlayersPage = {
+  init: function () {
+    Helpers.displayTeam(players.slice(1), playersList);
+  }
+}
+
+const HistoryPage = {
+
+  init: function () {
+    const historyRows = document.querySelector("#history-rows");
+    this.displayHistory(historyRows);
+
+    let rows = '<option value="">All Players</option>';
+
+    rows = rows + players.slice(1).map((p) => {
+      return `<option value="${p.name}">${p.name}</option>`;
+    }).join("");
+    
+    playerSelect.innerHTML = rows;
+    
+  },
+
+  displayHistory: function(historyRows, filter = "") {
+
+    let rows = "";
+
+    console.log(filter, filter == "");
+
+    for (i = games.length - 1; i >= 0; i--) {
+      rows = rows + games[i].team1.map((p) => {
+        if (filter === "" || filter === p.name) {
+          return Render.historyRow(games[i].gameDate, p.name, p.paid);
+        };
+      }).join("");
+
+      rows = rows + games[i].team2.map((p) => {
+        if (filter == "" || filter === p.name) {
+          return Render.historyRow(games[i].gameDate, p.name, p.paid);
+        };
+      }).join("");
+
+      if(filter === "") {
+        rows = rows + "<br>";
+      }
+    }
+  
+    historyRows.innerHTML = rows;
+
+  },
+
+  changeSelectedPlayer: function(e) {
+    const historyRows = document.querySelector("#history-rows");
+    HistoryPage.displayHistory(historyRows, event.target.value);
+  }
 }
 
 const Navigate = {
@@ -372,6 +532,11 @@ const Navigate = {
       return;
     }
 
+    if (showPage === "pick") {
+      GamePage.pickTeams();
+      showPage = "game";
+    }
+
     //hide all pages
     const pages = document.querySelectorAll(".page");
     [].forEach.call(pages, function(page) {
@@ -389,6 +554,12 @@ const Navigate = {
     switch(showPage) {
       case "game":
         GamePage.init();
+        break;
+      case "players":
+        PlayersPage.init();
+        break;
+      case "history":
+        HistoryPage.init();
         break;
     };
     
@@ -414,9 +585,13 @@ const payModalBack = document.querySelector("#pay-modal-bg");
 const subsModalBack = document.querySelector("#subs-modal-bg");
 const prevGame = document.querySelector("#previous-game");
 const nextGame = document.querySelector("#next-game");
+const addGameButton = document.querySelector("#add-game-button");
+const addGameToggle = document.querySelector("#add-game-toggle");
+const addGameToggleIcon = addGameToggle.querySelector("i");
 prevGame.addEventListener("click", GamePage.showPrevGame);
 nextGame.addEventListener("click", GamePage.showNextGame);
 addGameModalBack.addEventListener("click", GamePage.closeAddGameModal);
+addGameToggle.addEventListener("click", GamePage.addGameToggleButton);
 payModalBack.addEventListener("click", GamePage.closePayModal);
 subsModalBack.addEventListener("click", GamePage.closeSubsModal);
 
@@ -430,9 +605,11 @@ const team1List = document.querySelector("#team1-list");
 const team2List = document.querySelector("#team2-list");
 const subsList = document.querySelector("#subs-list");
 const playersList = document.querySelector("#players-list");
+const playerSelect = document.querySelector("#player-select");
 team1List.addEventListener("click", GamePage.selectPlayer);
 team2List.addEventListener("click", GamePage.selectPlayer);
 subsList.addEventListener("click", GamePage.selectPlayer);
+playerSelect.addEventListener("change", HistoryPage.changeSelectedPlayer);
 
 // payment modal
 const payToggle = document.querySelector("#pay-toggle");
