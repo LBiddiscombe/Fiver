@@ -1,8 +1,8 @@
 var players = [
   { id: 0, name: "tbc", weighting: 0, balance: 0.00},
-  { id: 1, name: "Lee", weighting: 3, balance: 10.20},
-  { id: 2, name: "Auldrius", weighting: 3, balance: 5.00},
-  { id: 3, name: "Paul", weighting: 3, balance: -40.00},
+  { id: 1, name: "Lee", weighting: 3, balance: 0.00},
+  { id: 2, name: "Auldrius", weighting: 3, balance: 0.00},
+  { id: 3, name: "Paul", weighting: 3, balance: 0.00},
   { id: 4, name: "Liam", weighting: 5, balance: 0.00},
   { id: 5, name: "Brian", weighting: 2, balance: 0.00},
   { id: 6, name: "Adam", weighting: 2, balance: 0.00},
@@ -34,7 +34,9 @@ const settings = {
   team1name : "Red",
   team2name : "White",
   teamSize : 5,
-  gameFrequency: 7
+  gameFrequency: 7,
+  gameFee : 6.00
+
 }
 
 function Player(name, weighting) {
@@ -50,6 +52,7 @@ function Game(gameDate, team1, team2) {
 };
 
 const Helpers = {
+
   formatDate: function(dt) {
     const newDate = new Date(dt);
     const options = {weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'};
@@ -84,22 +87,29 @@ const Helpers = {
   },
 
   displayTeam: function (team = [], playerList, unselectedIcon = "fa-user", selectedIcon = "fa-gbp", idxoffset = 0) {
+
     playerList.innerHTML = team.map((p, i) => {
-        return Render.playerBox (p, unselectedIcon, "fa-gbp", i + idxoffset);
+        return Render.playerBox (p, unselectedIcon, "fa-gbp", i + idxoffset, playerList.id);
     }).join("");
-  },
+  }
 
 }
 
 const Render = {
 
-  playerBox: function (player, unselectedIcon = "fa-user", selectedIcon ="fa-gbp", i) {
+  playerBox: function (player, unselectedIcon = "fa-user", selectedIcon ="fa-gbp", i, listId) {
 
     const paidClass = (player.paid && player.paid > 0) ? "paid" : "unpaid";
+    let bal = parseFloat(player.balance);
     player.listidx = i;
-
     selectedIcon = (player.id === 0) ? unselectedIcon : selectedIcon;
+    hidePaid = (listId.substring(0,4) === "team") ? "" : "is-invisible";
 
+    // show balance reduction if playing this week, and thats the week being displayed
+    if (player.id != 0 && listId.substring(0,4) === "team" && gameIndex === gameCount - 1) {
+      bal = bal - parseFloat(settings.gameFee);
+    }
+    
     return `
       <li class="box is-paddingless player-box ${paidClass}" data-playerid="${player.id}" data-listidx="${i}">
         <div class="player-box-left">
@@ -114,8 +124,8 @@ const Render = {
         </div>
         <div class="player-box-centre">
             <p class="player-name">${player.name}</p>
-            <p class="player-monies">Paid: <strong>${Helpers.formatMoney(player.paid)}</strong></p>
-            <p class="player-monies">Balance: <strong>${Helpers.formatMoney(player.balance)}</strong></p>
+            <p class="player-monies ${hidePaid}">Paid: <strong>${Helpers.formatMoney(player.paid)}</strong></p>
+            <p class="player-monies">Balance: <strong>${Helpers.formatMoney(bal)}</strong></p>
         </div>
         <div class="player-box-right">
           <a data-action="swapout">
@@ -278,7 +288,12 @@ const GamePage = {
     const player = game.team1.find(player => (player.listidx == playerSelected.dataset.listidx)) || game.team2.find(player => (player.listidx == playerSelected.dataset.listidx));
 
     if(player) {
+      // remove any existing payment
+      if (player.paid) {
+        player.balance = parseFloat(player.balance) - parseFloat(player.paid);
+      }
       player.paid = parseFloat(amount).toFixed(2);
+      player.balance = parseFloat(player.balance) + parseFloat(player.paid);
     }
 
     moneyField.value = "";
@@ -340,6 +355,15 @@ const GamePage = {
   },
 
   copyGame: function(game, dt) {
+
+    //charge players for previous weeks game
+    const teams = game.team1.concat(game.team2);
+    teams.forEach(function(p) {
+      if (p.id != 0) {
+        p.balance = parseFloat(p.balance) - parseFloat(settings.gameFee);
+      };
+    });
+
     const newGame = JSON.parse(JSON.stringify(game));
     newGame.gameDate = dt;
     

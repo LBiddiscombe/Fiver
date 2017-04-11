@@ -130,6 +130,7 @@ li.box.selected {
     align-self: center;
     position: absolute;
     right: 0;
+    top: 15px;
 }
 
 li.box .player-box-left .icon.selected {
