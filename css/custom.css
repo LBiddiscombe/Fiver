@@ -75,17 +75,8 @@ ul.players {
 }
 
 li.box {
-    padding-top: 1rem !important;
-    padding-bottom: 1rem !important;
+    
     margin-bottom: 0.5rem !important;
-}
-
-li .media-left {
-    margin-right: 5px !important;
-}
-
-li .media-right {
-    margin-left: -48px !important;
 }
 
 li.box.paid {
@@ -97,38 +88,6 @@ li.box.selected {
     box-shadow:inset 0px 0px 0px 4px;
 }
 
-li.box .media-left .icon.selected {
-    display: none;
-}
-
-li.box.selected .media-left .icon.selected {
-    display: inline-flex;
-}
-
-li.box .media-left .icon.unselected {
-    display: inline-flex;
-}
-
-li.box.selected .media-left .icon.unselected {
-    display: none;
-}
-
-li.box .media-right .icon {
-    display: none;
-}
-
-li.box.selected .media-right .icon {
-    display: inline-flex;
-}
-
-li.box .media-left a {
-    color: #4a4a4a;
-}
-
-li.box .media-right a {
-    color: #4a4a4a;
-}
-
 .title#player-name {
     color:#FFC04D;
     margin: 0;
@@ -136,4 +95,71 @@ li.box .media-right a {
 
 #pay-button, #add-game-button {
     background-color: #FFC04D !important;
+}
+
+.player-box {
+    display: flex;
+    flex-flow: row no-wrap;
+    position: relative;
+    height: 80px;
+}
+ 
+.player-box-left {
+    flex-shrink: 0;
+    align-self: center;
+}
+
+.player-box-centre {
+    flex: auto;
+    padding: 8px 0 0 !important;
+}
+ 
+.player-name {
+    font-size: 1.5rem;
+    font-weight: 300;
+    line-height: 1.125;
+}
+ 
+.player-monies {
+    font-size: 0.7rem;
+    font-weight: 300;
+    text-align: justify;
+}
+ 
+.player-box-right {
+    align-self: center;
+    position: absolute;
+    right: 0;
+}
+
+li.box .player-box-left .icon.selected {
+    display: none;
+}
+
+li.box.selected .player-box-left .icon.selected {
+    display: inline-flex;
+}
+
+li.box .player-box-left .icon.unselected {
+    display: inline-flex;
+}
+
+li.box.selected .player-box-left .icon.unselected {
+    display: none;
+}
+
+li.box .player-box-right .icon {
+    display: none;
+}
+
+li.box.selected .player-box-right .icon {
+    display: inline-flex;
+}
+
+.player-box-left a {
+    color: #4a4a4a;
+}
+
+.player-box-right a {
+    color: #4a4a4a;
 }

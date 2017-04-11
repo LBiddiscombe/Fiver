@@ -101,32 +101,29 @@ const Render = {
     selectedIcon = (player.id === 0) ? unselectedIcon : selectedIcon;
 
     return `
-      <li class="box is-paddingless ${paidClass}" data-playerid="${player.id}" data-listidx="${i}">
-        <article class="media">
-          <div class="media-left">
+      <li class="box is-paddingless player-box ${paidClass}" data-playerid="${player.id}" data-listidx="${i}">
+        <div class="player-box-left">
             <span class="unselected icon is-large">
-                <i class="fa ${unselectedIcon}"></i>
+            <i class="fa ${unselectedIcon}"></i>
+          </span>
+          <a data-action="${(player.id === 0) ? "" : "pay"}">
+            <span class="selected icon is-large">
+                <i class="fa ${selectedIcon}"></i>
             </span>
-            <a data-action="${(player.id === 0) ? "" : "pay"}">
-              <span class="selected icon is-large">
-                  <i class="fa ${selectedIcon}"></i>
-              </span>
-            </a>
-          </div>
-          <div class="media-content">
-            <div>
-              <p class="title is-4">${player.name}</p>
-              <p class="subtitle is-6"><small>Balance:<strong>${Helpers.formatMoney(player.balance)}</strong></small></p>
-            </div>
-          </div>
-          <div class="media-right is-marginless">
-            <a data-action="swapout">
-              <span class="icon is-large">
-                  <i class="fa fa-chevron-right"></i>
-              </span>
-            </a>
-          </div>
-        </article>
+          </a>
+        </div>
+        <div class="player-box-centre">
+            <p class="player-name">${player.name}</p>
+            <p class="player-monies">Paid: <strong>${Helpers.formatMoney(player.paid)}</strong></p>
+            <p class="player-monies">Balance: <strong>${Helpers.formatMoney(player.balance)}</strong></p>
+        </div>
+        <div class="player-box-right">
+          <a data-action="swapout">
+            <span class="unselected icon is-large">
+              <i class="fa fa-chevron-right"></i>
+            </span>
+          </a>
+        </div>
       </li>
     `;
   },
