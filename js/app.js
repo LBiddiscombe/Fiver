@@ -81,9 +81,12 @@ const Helpers = (function () {
 
     maskMoney: function(e) {
       var val = e.target.value.replace(".", "");
+      if (val == "") {
+        return;
+      }
 
       val = val / 100;
-      e.target.value = val <= 0 ? "" : val.toFixed(2);
+      e.target.value = val === 0 ? "" : val.toFixed(2);
 
       payButton.dataset.amount = val;
       payButton.classList.add("is-disabled");
@@ -379,7 +382,9 @@ const GamePage = {
     const teams = game.team1.concat(game.team2);
     teams.forEach(function(p) {
       if (p.id != 0) {
+        var player = players.find(player => (player.id == p.id));
         p.balance = parseFloat(p.balance) - parseFloat(settings.gameFee);
+        player.balance = p.balance;
       };
     });
 
@@ -509,6 +514,7 @@ const PlayersPage = {
     const li = event.target.closest("li");
     if(!li) {return};
   
+    
     const player = players.find(p => (p.id == li.dataset.playerid));
 
     const modal = document.querySelector("#player-modal");
@@ -536,11 +542,22 @@ const PlayersPage = {
 
   submitPlayer: function(e) {
     e.preventDefault();
+    const game = games[games.length - 1];
+    const subs = GamePage.subs(game);
+    var teams = game.team1.concat(game.team2).concat(subs);
     const player = players.find(p => (p.id == (document.querySelector("#player-form")).dataset.playerid));
+    const teamPlayer = teams.find(p => (p.id == player.id));
 
-    player.name = (document.querySelector("#player-name")).value;
-    player.weighting = parseInt((document.querySelector("#player-weighting-select")).value);
-    player.balance = parseFloat((document.querySelector("#player-balance")).value);
+    // update both the player balance and the team player one
+    if (player) { 
+      player.name = (document.querySelector("#player-name")).value;
+      player.weighting = parseInt((document.querySelector("#player-weighting-select")).value);
+      player.balance = parseFloat((document.querySelector("#player-balance")).value);
+      if (teamPlayer) {
+        teamPlayer.balance = player.balance;
+      }
+    }
+
     PlayersPage.closePlayerModal();
     PlayersPage.init();
   }

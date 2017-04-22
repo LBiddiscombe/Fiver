@@ -136,8 +136,8 @@ To run this app, open a command prompt in the root and type NPM START
               <p class="control has-icon">
                 <input class="input is-large money" type="number" pattern="[0-9]*" step="0.01" placeholder="Enter Amount" value="">
                 <span class="icon is-large">
-                    <i class="fa fa-gbp"></i>
-                  </span>
+                  <i class="fa fa-gbp"></i>
+                </span>
               </p>
             </div>
             <div class="box">
@@ -194,8 +194,11 @@ To run this app, open a command prompt in the root and type NPM START
                     </p>
                   </div>
                   <div class="field">
-                    <p class="control">
-                      <input class="input is-large money" type="number" pattern="[0-9]*" step="0.01" placeholder="Enter Balance" value="" id="player-balance">
+                    <p class="control has-icon">
+                      <input class="input is-large money" type="number" pattern="^-?\d+$" step="0.01" placeholder="Enter Balance" value="" id="player-balance">
+                      <span class="icon is-large">
+                        <i class="fa fa-gbp"></i>
+                      </span>
                     </p>
                   </div>
                 </div>
