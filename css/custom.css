@@ -48,7 +48,7 @@ ul.players {
     min-width: 18em;
 }
 
-#subs-modal .modal-card-body, #pay-modal .modal-card-body, #add-game-modal .modal-card-body {
+.modal-card-body {
     background-color: transparent !important;
     overflow-x: hidden;
 }
@@ -88,7 +88,7 @@ li.box.selected {
     box-shadow:inset 0px 0px 0px 4px;
 }
 
-.title#player-name {
+.title#player-name, .title#pay-name {
     color:#FFC04D;
     margin: 0;
 }

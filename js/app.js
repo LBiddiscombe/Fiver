@@ -1,3 +1,14 @@
+// Initialize Firebase
+var config = {
+  apiKey: "AIzaSyAsf0kx-0p2SYu-pJPCaLFLO3zhjcDlOcY",
+  authDomain: "fiver-3bf1d.firebaseapp.com",
+  databaseURL: "https://fiver-3bf1d.firebaseio.com",
+  projectId: "fiver-3bf1d",
+  storageBucket: "fiver-3bf1d.appspot.com",
+  messagingSenderId: "471072820035"
+};
+firebase.initializeApp(config);
+
 var players = [
   { id: 0, name: "tbc", weighting: 0, balance: 0.00},
   { id: 1, name: "Lee", weighting: 3, balance: 0.00},
@@ -51,49 +62,58 @@ function Game(gameDate, team1, team2) {
   this.team2 = team2;
 };
 
-const Helpers = {
+// refactored to be a self executing function
+const Helpers = (function () {
 
-  formatDate: function(dt) {
-    const newDate = new Date(dt);
-    const options = {weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'};
-    return newDate.toLocaleString('en-us', options);
-  },
+  return {
+    formatDate: function(dt) {
+      const newDate = new Date(dt);
+      const options = {weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'};
+      return newDate.toLocaleString('en-us', options);
+    },
 
-  formatMoney: function(value) {
-    if (!value || value === "NaN") {
-      return "£0.00";
+    formatMoney: function(value) {
+      if (!value || value === "NaN") {
+        return "£0.00";
+      }
+      return "£" + parseFloat(value).toFixed(2);
+    },
+
+    maskMoney: function(e) {
+      var val = e.target.value.replace(".", "");
+
+      val = val / 100;
+      e.target.value = val <= 0 ? "" : val.toFixed(2);
+
+      payButton.dataset.amount = val;
+      payButton.classList.add("is-disabled");
+      payToggleIcon.classList.remove("fa-check-square-o");
+      payToggleIcon.classList.add("fa-square-o");
+
+      savePlayerButton.classList.add("is-disabled");
+      savePlayerToggleIcon.classList.remove("fa-check-square-o");
+      savePlayerToggleIcon.classList.add("fa-square-o");
+
+    },
+
+    getGame: function() {
+      var game = games[gameIndex];
+      if (!game) {
+        gameIndex = games.length - 1;
+        game = games[gameIndex];
+      }
+      return game;
+    },
+
+    displayTeam: function (team = [], playerList, unselectedIcon = "fa-user", selectedIcon = "fa-gbp", idxoffset = 0) {
+
+      playerList.innerHTML = team.map((p, i) => {
+          return Render.playerBox (p, unselectedIcon, selectedIcon, i + idxoffset, playerList.id);
+      }).join("");
     }
-    return "£" + parseFloat(value).toFixed(2);
-  },
-
-  maskMoney: function(e) {
-    var val = e.target.value.replace(".", "");
-
-    val = val / 100;
-    e.target.value = val <= 0 ? "" : val.toFixed(2);
-    payButton.dataset.amount = val;
-
-    payButton.classList.add("is-disabled");
-    payToggleIcon.classList.remove("fa-check-square-o");
-  },
-
-  getGame: function() {
-    var game = games[gameIndex];
-    if (!game) {
-      gameIndex = games.length - 1;
-      game = games[gameIndex];
-    }
-    return game;
-  },
-
-  displayTeam: function (team = [], playerList, unselectedIcon = "fa-user", selectedIcon = "fa-gbp", idxoffset = 0) {
-
-    playerList.innerHTML = team.map((p, i) => {
-        return Render.playerBox (p, unselectedIcon, "fa-gbp", i + idxoffset, playerList.id);
-    }).join("");
   }
 
-}
+})();
 
 const Render = {
 
@@ -128,7 +148,7 @@ const Render = {
             <p class="player-monies">Balance: <strong>${Helpers.formatMoney(bal)}</strong></p>
         </div>
         <div class="player-box-right">
-          <a data-action="swapout">
+          <a data-action="action">
             <span class="unselected icon is-large">
               <i class="fa fa-chevron-right"></i>
             </span>
@@ -225,16 +245,15 @@ const GamePage = {
       const playerSelected = document.querySelector(".team li.selected");
       const player = game.team1.find(player => (player.listidx == playerSelected.dataset.listidx)) || game.team2.find(player => (player.listidx == playerSelected.dataset.listidx));
       const modal = document.querySelector("#pay-modal");
-      const modalTitle = document.querySelector("#player-name");
+      const modalTitle = document.querySelector("#pay-name");
       modalTitle.innerHTML = player.name;
-      moneyField.value = (player.paid) ? player.paid : "";
-      payButton.dataset.amount = moneyField.value;
+      payMoneyField.value;
       modal.classList.add("is-active");
       return;
     }
 
     // if the player was clicked a second time show the list of subs
-    if(a && a.dataset.action == "swapout") {
+    if(a && a.dataset.action == "action") {
       const modal = document.querySelector("#subs-modal");
       modal.classList.add("is-active");
       return;
@@ -296,7 +315,7 @@ const GamePage = {
       player.balance = parseFloat(player.balance) + parseFloat(player.paid);
     }
 
-    moneyField.value = "";
+    payMoneyField.value = "";
     payButton.dataset.amount = 0.00;
     payButton.classList.add("is-disabled");
     payToggleIcon.classList.remove("fa-check-square-o");
@@ -483,7 +502,49 @@ const GamePage = {
 const PlayersPage = {
   init: function () {
     Helpers.displayTeam(players.slice(1), playersList);
+  },
+
+  selectPlayer: function (e) {
+
+    const li = event.target.closest("li");
+    if(!li) {return};
+  
+    const player = players.find(p => (p.id == li.dataset.playerid));
+
+    const modal = document.querySelector("#player-modal");
+    (document.querySelector("#player-name")).value = player.name;
+    (document.querySelector("#player-weighting-select")).value = player.weighting;
+    (document.querySelector("#player-balance")).value = parseFloat(player.balance).toFixed(2);
+    savePlayerToggleIcon.classList.remove("fa-check-square-o");
+    savePlayerToggleIcon.classList.add("fa-square-o");
+    savePlayerButton.classList.add("is-disabled");
+    (document.querySelector("#player-form")).dataset.playerid = player.id;
+    modal.classList.add("is-active");
+    return;
+  },
+
+  savePlayerToggleButton: function(e) {
+    savePlayerToggleIcon.classList.toggle("fa-check-square-o");
+    savePlayerToggleIcon.classList.toggle("fa-square-o");
+    savePlayerButton.classList.toggle("is-disabled");
+  },
+
+  closePlayerModal: function() {
+    const modal = event.target.closest(".modal");
+    if (modal) {modal.classList.remove("is-active")};
+  },
+
+  submitPlayer: function(e) {
+    e.preventDefault();
+    const player = players.find(p => (p.id == (document.querySelector("#player-form")).dataset.playerid));
+
+    player.name = (document.querySelector("#player-name")).value;
+    player.weighting = parseInt((document.querySelector("#player-weighting-select")).value);
+    player.balance = parseFloat((document.querySelector("#player-balance")).value);
+    PlayersPage.closePlayerModal();
+    PlayersPage.init();
   }
+
 }
 
 const HistoryPage = {
@@ -604,21 +665,30 @@ navToggle.addEventListener("click", Navigate.toggleNavMenu);
 const addGameModalBack = document.querySelector("#add-game-modal-bg");
 const payModalBack = document.querySelector("#pay-modal-bg");
 const subsModalBack = document.querySelector("#subs-modal-bg");
+const playerModalBack = document.querySelector("#player-modal-bg");
 const prevGame = document.querySelector("#previous-game");
 const nextGame = document.querySelector("#next-game");
 const addGameButton = document.querySelector("#add-game-button");
 const addGameToggle = document.querySelector("#add-game-toggle");
 const addGameToggleIcon = addGameToggle.querySelector("i");
+const savePlayerButton = document.querySelector("#save-player-button");
+const savePlayerToggle = document.querySelector("#save-player-toggle");
+const savePlayerToggleIcon = savePlayerToggle.querySelector("i");
 prevGame.addEventListener("click", GamePage.showPrevGame);
 nextGame.addEventListener("click", GamePage.showNextGame);
 addGameModalBack.addEventListener("click", GamePage.closeAddGameModal);
 addGameToggle.addEventListener("click", GamePage.addGameToggleButton);
 payModalBack.addEventListener("click", GamePage.closePayModal);
 subsModalBack.addEventListener("click", GamePage.closeSubsModal);
+savePlayerToggle.addEventListener("click", PlayersPage.savePlayerToggleButton);
+playerModalBack.addEventListener("click", PlayersPage.closePlayerModal);
 
 // forms
 const addGameForm = document.querySelector("#add-game-form");
 addGameForm.addEventListener("submit", GamePage.submitAddGame);
+
+const playerForm = document.querySelector("#player-form");
+playerForm.addEventListener("submit", PlayersPage.submitPlayer);
 
 
 // lists
@@ -630,16 +700,22 @@ const playerSelect = document.querySelector("#player-select");
 team1List.addEventListener("click", GamePage.selectPlayer);
 team2List.addEventListener("click", GamePage.selectPlayer);
 subsList.addEventListener("click", GamePage.selectPlayer);
+playersList.addEventListener("click", PlayersPage.selectPlayer);
 playerSelect.addEventListener("change", HistoryPage.changeSelectedPlayer);
 
 // payment modal
 const payToggle = document.querySelector("#pay-toggle");
 const payToggleIcon = payToggle.querySelector("i");
 const payButton = document.querySelector("#pay-button");
-const moneyField = document.querySelector("input.money");
+const payMoneyField = document.querySelector("input.money");
 payToggle.addEventListener("click", GamePage.payToggleButton);
 payButton.addEventListener("click", GamePage.addPayment);
-moneyField.addEventListener("keyup", Helpers.maskMoney);
-moneyField.addEventListener("change", Helpers.maskMoney);
+payMoneyField.addEventListener("keyup", Helpers.maskMoney);
+payMoneyField.addEventListener("change", Helpers.maskMoney);
+
+
+const playerMoneyField = document.querySelector("#player-balance");
+playerMoneyField.addEventListener("keyup", Helpers.maskMoney);
+playerMoneyField.addEventListener("change", Helpers.maskMoney);
 
 Navigate.renderPage();
