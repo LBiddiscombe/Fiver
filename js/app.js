@@ -81,7 +81,6 @@ const Helpers = (function () {
     },
 
     maskMoney: function(e) {
-      console.log(e.target);
       var val = e.target.value.replace(".", "");
       if (val == "") {
         return;
@@ -91,11 +90,11 @@ const Helpers = (function () {
       e.target.value = val === 0 ? "" : val.toFixed(2);
 
       payButton.dataset.amount = val;
-      payButton.classList.add("is-disabled");
+      payButton.disabled = true;
       payToggleIcon.classList.remove("fa-check-square-o");
       payToggleIcon.classList.add("fa-square-o");
 
-      savePlayerButton.classList.add("is-disabled");
+      savePlayerButton.disabled = true;
       savePlayerToggleIcon.classList.remove("fa-check-square-o");
       savePlayerToggleIcon.classList.add("fa-square-o");
 
@@ -279,7 +278,8 @@ const GamePage = {
       const modal = document.querySelector("#pay-modal");
       const modalTitle = document.querySelector("#pay-name");
       modalTitle.innerHTML = player.name;
-      payMoneyField.value;
+      payMoneyField.value = (player.paid) ? player.paid : "";
+      payButton.dataset.amount = payMoneyField.value;
       modal.classList.add("is-active");
       return;
     }
@@ -330,7 +330,7 @@ const GamePage = {
   },
 
   addPayment: function(e) {
-    const a = event.target.closest("a");
+    const a = event.target.closest("input");
     if(!a) {return};
 
     const game = Helpers.getGame();
@@ -349,7 +349,7 @@ const GamePage = {
 
     payMoneyField.value = "";
     payButton.dataset.amount = 0.00;
-    payButton.classList.add("is-disabled");
+    payButton.disabled = true;
     payToggleIcon.classList.remove("fa-check-square-o");
     payToggleIcon.classList.add("fa-square-o");
 
@@ -360,13 +360,13 @@ const GamePage = {
   payToggleButton: function(e) {
     payToggleIcon.classList.toggle("fa-check-square-o");
     payToggleIcon.classList.toggle("fa-square-o");
-    payButton.classList.toggle("is-disabled");
+    payButton.disabled = !payButton.disabled;
   },
 
   addGameToggleButton: function(e) {
     addGameToggleIcon.classList.toggle("fa-check-square-o");
     addGameToggleIcon.classList.toggle("fa-square-o");
-    addGameButton.classList.toggle("is-disabled");
+    addGameButton.disabled = !addGameButton.disabled;
   },
 
   closeSubsModal: function() {
@@ -396,7 +396,7 @@ const GamePage = {
 
     addGameToggleIcon.classList.remove("fa-check-square-o");
     addGameToggleIcon.classList.add("fa-square-o");
-    addGameButton.classList.add("is-disabled");
+    addGameButton.disabled = true;
 
   },
 
@@ -552,7 +552,7 @@ const PlayersPage = {
     (document.querySelector("#player-balance")).value = parseFloat(player.balance).toFixed(2);
     savePlayerToggleIcon.classList.remove("fa-check-square-o");
     savePlayerToggleIcon.classList.add("fa-square-o");
-    savePlayerButton.classList.add("is-disabled");
+    savePlayerButton.disabled = true;
     (document.querySelector("#player-form")).dataset.playerid = player.id;
     modal.classList.add("is-active");
     return;
@@ -565,7 +565,7 @@ const PlayersPage = {
     (document.querySelector("#player-balance")).value = 0.00;
     savePlayerToggleIcon.classList.remove("fa-check-square-o");
     savePlayerToggleIcon.classList.add("fa-square-o");
-    savePlayerButton.classList.add("is-disabled");
+    savePlayerButton.disabled = true;
     (document.querySelector("#player-form")).dataset.playerid = players.length;
     modal.classList.add("is-active");
     return;
@@ -574,7 +574,7 @@ const PlayersPage = {
   savePlayerToggleButton: function(e) {
     savePlayerToggleIcon.classList.toggle("fa-check-square-o");
     savePlayerToggleIcon.classList.toggle("fa-square-o");
-    savePlayerButton.classList.toggle("is-disabled");
+    savePlayerButton.disabled = !savePlayerButton.disabled;
   },
 
   closePlayerModal: function() {

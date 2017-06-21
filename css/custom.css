@@ -93,7 +93,7 @@ li.box.selected {
     margin: 0;
 }
 
-#pay-button, #add-game-button, #add-player-button {
+#pay-button, #add-game-button, #add-player-button, #save-player-button, #player-balance-posneg, #pay-money-posneg {
     background-color: #FFC04D !important;
 }
 
