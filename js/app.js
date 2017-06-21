@@ -509,6 +509,7 @@ const GamePage = {
 const PlayersPage = {
   init: function () {
     Helpers.displayTeam(players.slice(1), playersList);
+    localStorage.setItem("players", JSON.stringify(players));
   },
 
   selectPlayer: function (e) {
