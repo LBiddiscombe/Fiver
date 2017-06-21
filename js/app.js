@@ -9,7 +9,7 @@ var config = {
 };
 firebase.initializeApp(config);
 
-var players = [
+var players = JSON.parse(localStorage.getItem('players')) || [
   { id: 0, name: "tbc", weighting: 0, balance: 0.00},
   { id: 1, name: "Lee", weighting: 3, balance: 0.00},
   { id: 2, name: "Auldrius", weighting: 3, balance: 0.00},
@@ -50,10 +50,11 @@ const settings = {
 
 }
 
-function Player(name, weighting) {
+function Player(name, weighting, balance) {
+  this.id = players.length;
   this.name = name;
   this.weighting = weighting;
-  this.balance = 0;
+  this.balance = balance;
 }
 
 function Game(gameDate, team1, team2) {
@@ -204,6 +205,7 @@ const GamePage = {
 
     localStorage.setItem("gameIndex", gameIndex);
     localStorage.setItem("game|" + gameIndex, JSON.stringify(game));
+    localStorage.setItem("players", JSON.stringify(players));
   },
 
   showNextGame: function() {
@@ -514,7 +516,6 @@ const PlayersPage = {
     const li = event.target.closest("li");
     if(!li) {return};
   
-    
     const player = players.find(p => (p.id == li.dataset.playerid));
 
     const modal = document.querySelector("#player-modal");
@@ -525,6 +526,19 @@ const PlayersPage = {
     savePlayerToggleIcon.classList.add("fa-square-o");
     savePlayerButton.classList.add("is-disabled");
     (document.querySelector("#player-form")).dataset.playerid = player.id;
+    modal.classList.add("is-active");
+    return;
+  },
+
+  addPlayerButton: function (e) {
+    const modal = document.querySelector("#player-modal");
+    (document.querySelector("#player-name")).value = "";
+    (document.querySelector("#player-weighting-select")).value = 3;
+    (document.querySelector("#player-balance")).value = 0.00;
+    savePlayerToggleIcon.classList.remove("fa-check-square-o");
+    savePlayerToggleIcon.classList.add("fa-square-o");
+    savePlayerButton.classList.add("is-disabled");
+    (document.querySelector("#player-form")).dataset.playerid = players.length;
     modal.classList.add("is-active");
     return;
   },
@@ -542,10 +556,19 @@ const PlayersPage = {
 
   submitPlayer: function(e) {
     e.preventDefault();
+    // for a new player create the player object and add to subs
+    if (document.querySelector("#player-form").dataset.playerid == players.length ) {
+      var player = new Player(((document.querySelector("#player-name")).value), ((document.querySelector("#player-weighting-select")).value), ((document.querySelector("#player-balance")).value));
+      players.push(player);
+    }
+    else {
+      var player = players.find(p => (p.id == (document.querySelector("#player-form")).dataset.playerid));
+    }
+
     const game = games[games.length - 1];
     const subs = GamePage.subs(game);
     var teams = game.team1.concat(game.team2).concat(subs);
-    const player = players.find(p => (p.id == (document.querySelector("#player-form")).dataset.playerid));
+    
     const teamPlayer = teams.find(p => (p.id == player.id));
 
     // update both the player balance and the team player one
@@ -691,6 +714,7 @@ const addGameToggleIcon = addGameToggle.querySelector("i");
 const savePlayerButton = document.querySelector("#save-player-button");
 const savePlayerToggle = document.querySelector("#save-player-toggle");
 const savePlayerToggleIcon = savePlayerToggle.querySelector("i");
+const addPlayerButton = document.querySelector("#add-player-button");
 prevGame.addEventListener("click", GamePage.showPrevGame);
 nextGame.addEventListener("click", GamePage.showNextGame);
 addGameModalBack.addEventListener("click", GamePage.closeAddGameModal);
@@ -699,6 +723,7 @@ payModalBack.addEventListener("click", GamePage.closePayModal);
 subsModalBack.addEventListener("click", GamePage.closeSubsModal);
 savePlayerToggle.addEventListener("click", PlayersPage.savePlayerToggleButton);
 playerModalBack.addEventListener("click", PlayersPage.closePlayerModal);
+addPlayerButton.addEventListener("click", PlayersPage.addPlayerButton);
 
 // forms
 const addGameForm = document.querySelector("#add-game-form");
