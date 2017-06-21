@@ -132,13 +132,19 @@ To run this app, open a command prompt in the root and type NPM START
         <div class="modal-card">
           <h1 id="pay-name" class="title has-text-centered">Take Monies</h1>
           <section class="modal-card-body">
-            <div class="field level-item">
+            <div class="field has-addons level-item">
+              <p class="control">
+                <a class="button is-primary is-large" id="pay-money-posneg">
+                  +/-
+                </a>
+              </p>
               <p class="control has-icon">
-                <input class="input is-large money" type="number" pattern="[0-9]*" step="0.01" placeholder="Enter Amount" value="">
+                <input class="input is-large money" id="pay-money" type="number" pattern="[0-9]*" step="0.01" placeholder="Amount" value="">
                 <span class="icon is-large">
                   <i class="fa fa-gbp"></i>
                 </span>
               </p>
+              
             </div>
             <div class="box">
               <div class="field">
@@ -201,9 +207,14 @@ To run this app, open a command prompt in the root and type NPM START
                       </span>
                     </p>
                   </div>
-                  <div class="field">
+                  <div class="field has-addons">
+                    <p class="control">
+                      <a class="button is-primary is-large" id="player-balance-posneg">
+                        +/-
+                      </a>
+                    </p>
                     <p class="control has-icon">
-                      <input class="input is-large money" type="number" pattern="[0-9]*" step="0.01" placeholder="Enter Balance" value="" id="player-balance">
+                      <input class="input is-large money" id="player-balance" type="number" pattern="[0-9]*" step="0.01" placeholder="Enter Balance" value="">
                       <span class="icon is-large">
                         <i class="fa fa-gbp"></i>
                       </span>

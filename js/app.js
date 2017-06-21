@@ -81,6 +81,7 @@ const Helpers = (function () {
     },
 
     maskMoney: function(e) {
+      console.log(e.target);
       var val = e.target.value.replace(".", "");
       if (val == "") {
         return;
@@ -98,6 +99,32 @@ const Helpers = (function () {
       savePlayerToggleIcon.classList.remove("fa-check-square-o");
       savePlayerToggleIcon.classList.add("fa-square-o");
 
+    },
+
+    toggleMoneyNegative: function(e) {
+
+      console.log(e.target);
+
+      if (e.target.id === "pay-money-posneg") {
+        var field = payMoneyField;
+      }
+      else if (e.target.id === "player-balance-posneg") {
+        var field = playerMoneyField;
+      }
+
+      var val = field.value.replace(".", "");
+      
+      if (val == "") {
+        return;
+      }
+      
+      val = (val / 100) * -1;
+      field.value = val === 0 ? "" : val.toFixed(2);
+
+      if (e.id = "pay-money-posneg") {
+        payButton.dataset.amount = val;
+      }
+      
     },
 
     getGame: function() {
@@ -750,15 +777,19 @@ playerSelect.addEventListener("change", HistoryPage.changeSelectedPlayer);
 const payToggle = document.querySelector("#pay-toggle");
 const payToggleIcon = payToggle.querySelector("i");
 const payButton = document.querySelector("#pay-button");
-const payMoneyField = document.querySelector("input.money");
+const payMoneyField = document.querySelector("#pay-money");
+const payMoneyPosneg = document.querySelector("#pay-money-posneg");
+
 payToggle.addEventListener("click", GamePage.payToggleButton);
 payButton.addEventListener("click", GamePage.addPayment);
 payMoneyField.addEventListener("keyup", Helpers.maskMoney);
 payMoneyField.addEventListener("change", Helpers.maskMoney);
-
+payMoneyPosneg.addEventListener("click", Helpers.toggleMoneyNegative);
 
 const playerMoneyField = document.querySelector("#player-balance");
+const playerMoneyPosneg = document.querySelector("#player-balance-posneg");
 playerMoneyField.addEventListener("keyup", Helpers.maskMoney);
 playerMoneyField.addEventListener("change", Helpers.maskMoney);
+playerMoneyPosneg.addEventListener("click", Helpers.toggleMoneyNegative);
 
 Navigate.renderPage();
