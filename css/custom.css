@@ -97,6 +97,14 @@ li.box.selected {
     background-color: #FFC04D !important;
 }
 
+#sync {
+    visibility: hidden;
+}
+
+#sync.syncing {
+    visibility: visible;
+}
+
 .player-box {
     display: flex;
     flex-flow: row no-wrap;

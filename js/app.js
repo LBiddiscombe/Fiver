@@ -1,14 +1,4 @@
-// Initialize Firebase
-var config = {
-  apiKey: "AIzaSyAsf0kx-0p2SYu-pJPCaLFLO3zhjcDlOcY",
-  authDomain: "fiver-3bf1d.firebaseapp.com",
-  databaseURL: "https://fiver-3bf1d.firebaseio.com",
-  projectId: "fiver-3bf1d",
-  storageBucket: "fiver-3bf1d.appspot.com",
-  messagingSenderId: "471072820035"
-};
-firebase.initializeApp(config);
-
+/*
 var players = JSON.parse(localStorage.getItem('players')) || [
   { id: 0, name: "tbc", weighting: 0, balance: 0.00},
   { id: 1, name: "Lee", weighting: 3, balance: 0.00},
@@ -34,12 +24,19 @@ var players = JSON.parse(localStorage.getItem('players')) || [
 var gameIndex = parseInt(localStorage.getItem("gameIndex")) || -1;
 var gameCount = parseInt(localStorage.getItem("gameCount")) || 0;
 
+
 var games = [];
 if (gameCount > 0) {
   for (i = 0; i < gameCount; i++) { 
     games.push(JSON.parse(localStorage.getItem("game|" + i)));
   }
 }
+*/
+
+var players = [];
+var gameCount = 0;
+var gameIndex = 0;
+var games = [];
 
 const settings = {
   team1name : "Red",
@@ -67,6 +64,58 @@ function Game(gameDate, team1, team2) {
 const Helpers = (function () {
 
   return {
+
+    loadData: new Promise(function(resolve) {
+      var endpoint = 'https://api.github.com/gists/6adf2181837d5b87a0ad8f0b1ed8cf58'
+      var fiver = {};
+      fetch(endpoint)
+        .then(blob => blob.json())
+        .then(data => {
+          fiver = JSON.parse(data.files["fiver.json"].content);
+          gameIndex = fiver.gameIndex;
+          gameCount = fiver.gameCount;
+          players.push(...fiver.players);
+          games.push(...fiver.games);
+          resolve();
+        });
+    }),
+
+    saveData: function() {
+
+      document.querySelector("#sync").classList.add("syncing");
+
+      var fiver = {
+        "gameIndex" : gameIndex,
+        "gameCount" : gameCount,
+        "players" : players,
+        "games" : games
+      }
+
+      
+
+      var endpoint = 'https://api.github.com/gists/6adf2181837d5b87a0ad8f0b1ed8cf58';
+      var headers = new Headers();
+      
+      headers.append("Authorization", "token a0610633b9c092dae7ff474fb08e1056c15de0f3");
+      
+      var body = {
+        "description": "Fiver Data Store",
+        "files": {
+          "fiver.json": {
+            "content": JSON.stringify(fiver)
+          }
+        }
+      };
+      
+      fetch(endpoint, {
+        method: 'PATCH',
+        headers: headers,
+        body: JSON.stringify(body)
+      }).then(function (){
+        document.querySelector("#sync").classList.remove("syncing");
+      });
+    },
+
     formatDate: function(dt) {
       const newDate = new Date(dt);
       const options = {weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'};
@@ -228,10 +277,11 @@ const GamePage = {
     Helpers.displayTeam(game.team1, team1List);
     Helpers.displayTeam(game.team2, team2List, "fa-user-o", "fa-gbp", settings.teamSize);
     Helpers.displayTeam(subs, subsList, "fa-user-circle-o", "", settings.teamSize * 2);
+    Helpers.saveData();
 
-    localStorage.setItem("gameIndex", gameIndex);
-    localStorage.setItem("game|" + gameIndex, JSON.stringify(game));
-    localStorage.setItem("players", JSON.stringify(players));
+    //localStorage.setItem("gameIndex", gameIndex);
+    //localStorage.setItem("game|" + gameIndex, JSON.stringify(game));
+    //localStorage.setItem("players", JSON.stringify(players));
   },
 
   showNextGame: function() {
@@ -456,7 +506,8 @@ const GamePage = {
 
     games.push(newGame);
     gameCount = games.length;
-    localStorage.setItem("gameCount", gameCount);
+    //localStorage.setItem("gameCount", gameCount);
+    Helpers.saveData();
 
     const modal = document.querySelector("#add-game-modal");
     modal.classList.remove("is-active");
@@ -536,7 +587,8 @@ const GamePage = {
 const PlayersPage = {
   init: function () {
     Helpers.displayTeam(players.slice(1), playersList);
-    localStorage.setItem("players", JSON.stringify(players));
+    //localStorage.setItem("players", JSON.stringify(players));
+    Helpers.saveData();
   },
 
   selectPlayer: function (e) {
@@ -792,4 +844,6 @@ playerMoneyField.addEventListener("keyup", Helpers.maskMoney);
 playerMoneyField.addEventListener("change", Helpers.maskMoney);
 playerMoneyPosneg.addEventListener("click", Helpers.toggleMoneyNegative);
 
-Navigate.renderPage();
+Helpers.loadData.then(function (){
+  Navigate.renderPage();
+});
